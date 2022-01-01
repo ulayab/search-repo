@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+import loadingGif from './loading.gif';
 import './App.css';
 import SearchBar from './Components/SearchBar';
 import RepoList from './Components/RepoList';
@@ -8,9 +8,11 @@ function App() {
   const [repoList, setRepoList] = React.useState([])
   const [totalCount, setTotalCount] = React.useState(0)
   const [searchText, setSearchText] = React.useState('')
+  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
     async function fetchData() {
+      setLoading(true)
       try {
         const url = 'https://api.github.com/search/repositories'
         const resp = await fetch(`${url}?q=${searchText}`)
@@ -21,6 +23,7 @@ function App() {
       }catch(ex){
         console.warn(ex)
       }
+      setLoading(false)
     }
 
     searchText!== '' && fetchData()
@@ -31,7 +34,8 @@ function App() {
       <h1>Search Repository in Github</h1>
       <SearchBar onChangeText={value => setSearchText(value)} value={searchText}/>
       {searchText == '' && <p>Please insert the repo name</p>}
-      {totalCount && <p>There are {totalCount} results.</p>}
+      {!!totalCount && <p>There are {totalCount} results.</p>}
+      {loading && <img src={loadingGif} width={50}/>}
       <RepoList repoList={repoList}/>
     </div>
   );
