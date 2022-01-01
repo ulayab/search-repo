@@ -48,25 +48,6 @@ p { margin: 0;}
   padding: 10px;
   margin-bottom: 10px;
 }
-.repo-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-}
-
-.repo-item {
-  display: flex;
-  margin-top: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-  width: 70%;
-  cursor: pointer;
-  text-decoration: none;
-  color: #0f0909;
-  overflow: auto;
-}
 
 .row {
   display: flex;
