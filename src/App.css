@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +35,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.search-bar {
+  background-color: #61dafb;
+}
+
+.search-bar > input{
+  font-size: 20px;
+  letter-spacing: 1px;
+  padding: 10px;
 }
