@@ -1,9 +1,9 @@
 function RepoList(props) {
 	return(
 		<div>
-			{props.repoList.map((repo,idx) =>
+			{/* {props.repoList.map((repo,idx) =>
 				<div></div>
-			)}
+			)} */}
 		</div>
 	)
 }
