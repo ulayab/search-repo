@@ -32,7 +32,7 @@ async function fetchData(keyword) {
 
   return (
     <div className="App">
-      <h1 className="header">Search Repository in Github</h1>
+      <h1>Search Repository in Github</h1>
       <SearchBar onSetKeyword={debounceSetKeyword}/>
      
       {!!totalCount && <p>There are {totalCount} results.</p>}

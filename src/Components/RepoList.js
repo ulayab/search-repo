@@ -38,15 +38,22 @@ const Wrapper = styled.div`
 
 	& .repo-item {
 		display: flex;
-		margin-top: 15px;
-		border: 1px solid #ccc;
+		margin: 15px 0px;
+		/* border: 1px solid #ccc; */
 		border-radius: 5px;
 		padding: 20px;
 		width: 70%;
 		cursor: pointer;
 		text-decoration: none;
 		color: #0f0909;
+		background-color: #fff;
 		overflow: auto;
+		transition: 300ms;
+	  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03), 0 6px 6px rgba(0, 0, 0, 0.03);
+
+  &:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 6px 6px rgba(0, 0, 0, 0.08);
+  }
 	}
 
 	& span {
