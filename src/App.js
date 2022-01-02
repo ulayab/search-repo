@@ -1,5 +1,6 @@
 import React from 'react';
 import debounce from 'lodash.debounce'
+import { useHistory, useLocation } from "react-router-dom";
 import loadingGif from './loading.gif';
 import './App.css';
 import SearchBar from './Components/SearchBar';
@@ -9,6 +10,10 @@ function App() {
   const [repoList, setRepoList] = React.useState([])
   const [totalCount, setTotalCount] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
+  const history = useHistory();
+  let location = useLocation();
+  let search = location.search.substring(3) // split `?q=`
+  console.log('location', location)
 
   let page = 1
 
@@ -37,6 +42,7 @@ console.log('page?', page)
 
   const debounceSetKeyword = debounce((keyword) => {
     fetchData({keyword})
+    history.push(`?q=${keyword}`);
   }, 1000)
 
   function handleScroll (e) {
@@ -56,6 +62,7 @@ console.log('page?', page)
   return (
     <div className="App">
       <h1>Search Repository in Github</h1>
+      <button onClick={() => history.push('/home')}>123</button>
       <SearchBar onSetKeyword={debounceSetKeyword}/>
         {console.log('total count', totalCount)}
       {totalCount === 0 && <p>No matches were found.</p>}
