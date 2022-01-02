@@ -13,26 +13,23 @@ function App() {
   const history = useHistory();
   let location = useLocation();
   let search = location.search.substring(3) // split `?q=`
-  console.log('location', location)
 
   let page = 1
-
-  async function fetchData({keyword}) {
+  async function fetchData() {
     setLoading(true)
     try {
-console.log('page?', page)
-
     const url = 'https://api.github.com/search/repositories'
-    const query = `${ keyword ? `?q=${keyword}?page=${page}` : ''}`
+    const query = `?q=${search}?page=${page}`
     const resp = await fetch(`${url}${query}`)
     const data = await resp.json()
-    // console.log('data====',data)
-    if(data.items) {
-      setTotalCount(data.total_count)
-      setRepoList(data.items)
-    } else {
+    if(!data.items || !search || search === "") {
       setTotalCount(null)
       setRepoList([])
+    } else {
+      let new_items = []
+      data.items.forEach(item => new_items.push(item))
+      setTotalCount(data.total_count)
+      setRepoList(prevRepoList => [...prevRepoList, ...new_items])
     }
   }catch(ex){
     console.warn(ex)
@@ -41,7 +38,6 @@ console.log('page?', page)
 }
 
   const debounceSetKeyword = debounce((keyword) => {
-    fetchData({keyword})
     history.push(`?q=${keyword}`);
   }, 1000)
 
@@ -49,9 +45,8 @@ console.log('page?', page)
     let topOfScroll = e.target.documentElement.scrollTop
     let totalHeight = e.target.documentElement.scrollHeight 
     if(topOfScroll + window.innerHeight == totalHeight) {
-      console.log('at the bottom !!!!!!!!!!')
       page = page + 1
-      // fetchData()
+      fetchData({keyword: search})
     }
   }
 
@@ -59,17 +54,21 @@ console.log('page?', page)
     window.addEventListener("scroll", handleScroll)
   },[])
 
+  React.useEffect(() => {
+    fetchData()
+  },[search])
+
+
   return (
     <div className="App">
       <h1>Search Repository in Github</h1>
       <button onClick={() => history.push('/home')}>123</button>
       <SearchBar onSetKeyword={debounceSetKeyword}/>
-        {console.log('total count', totalCount)}
       {totalCount === 0 && <p>No matches were found.</p>}
       {!!totalCount && <p>{totalCount} results were found.</p>}
 
-      {loading && <img src={loadingGif} width={50}/>}
       <RepoList repoList={repoList}/>
+      {loading && <img src={loadingGif} width={50}/>}
     </div>
   );
 }
