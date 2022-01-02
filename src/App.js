@@ -10,14 +10,18 @@ function App() {
   const [totalCount, setTotalCount] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
 
-async function fetchData(keyword) {
-  setLoading(true)
-  try {
+  let page = 1
+
+  async function fetchData({keyword}) {
+    setLoading(true)
+    try {
+console.log('page?', page)
+
     const url = 'https://api.github.com/search/repositories'
-    const query = `${ keyword ? `?q=${keyword}` : ''}`
+    const query = `${ keyword ? `?q=${keyword}?page=${page}` : ''}`
     const resp = await fetch(`${url}${query}`)
     const data = await resp.json()
-    console.log('data====',data)
+    // console.log('data====',data)
     if(data.items) {
       setTotalCount(data.total_count)
       setRepoList(data.items)
@@ -32,8 +36,22 @@ async function fetchData(keyword) {
 }
 
   const debounceSetKeyword = debounce((keyword) => {
-    fetchData(keyword)
+    fetchData({keyword})
   }, 1000)
+
+  function handleScroll (e) {
+    let topOfScroll = e.target.documentElement.scrollTop
+    let totalHeight = e.target.documentElement.scrollHeight 
+    if(topOfScroll + window.innerHeight == totalHeight) {
+      console.log('at the bottom !!!!!!!!!!')
+      page = page + 1
+      // fetchData()
+    }
+  }
+
+  React.useEffect(() => {
+    window.addEventListener("scroll", handleScroll)
+  },[])
 
   return (
     <div className="App">
