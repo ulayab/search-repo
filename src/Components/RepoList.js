@@ -9,10 +9,10 @@ function RepoList(props) {
 			{props.repoList.map((repo,idx) =>
 				<a className="repo-item" target="_blank" href={repo.html_url}>
 					<img src={repo.owner.avatar_url} width={100} height={100}/>
-					<div style={{marginLeft: 20 , textAlign:'start'}}>
-						<p style={{fontWeight: 'bold', fontSize:18}}>{repo.full_name}</p>
-						<p style={{color: '#4c4c4c', fontSize: 12}}>{new Date(repo.created_at).toLocaleDateString('en-ZA')} created</p>
-						<p style={{color: '#4c4c4c', fontSize: 14, marginTop: 5}}>{repo.description}</p>
+					<div className="repo-content">
+						<p className="name">{repo.full_name}</p>
+						<p className="date">{new Date(repo.created_at).toLocaleDateString('en-ZA')} created</p>
+						<p className="description">{repo.description}</p>
 						<div className="row" style={{marginTop: 10}}>
 							<span>
 								<Star width={16}/>
@@ -54,6 +54,30 @@ const Wrapper = styled.div`
   &:hover {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 6px 6px rgba(0, 0, 0, 0.08);
   }
+
+	& > .repo-content {
+		margin-left: 20px;
+		text-align: start;
+		& > .name {
+			font-weight: bold;
+			font-size: 18px;
+		}
+	
+		& > .date {
+			color: #4c4c4c;
+			font-size: 12px;
+		}
+	
+		& > .description {
+			color: #4c4c4c;
+			font-size: 14px;
+			margin-top: 5px;
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+	}
 	}
 
 	& span {
