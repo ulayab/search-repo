@@ -62,7 +62,6 @@ function App() {
   return (
     <div className="App">
       <h1>Search Repository in Github</h1>
-      <button onClick={() => history.push('/home')}>123</button>
       <SearchBar onSetKeyword={debounceSetKeyword}/>
       {totalCount === 0 && <p>No matches were found.</p>}
       {!!totalCount && <p>{totalCount} results were found.</p>}
