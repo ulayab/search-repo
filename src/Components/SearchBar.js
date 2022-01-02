@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 function SearchBar (props) {
-	const [searchText, setSearchText] = React.useState('')
+	const [searchText, setSearchText] = React.useState(props.paramsSearch)
 
 	return(
 		<Wrapper>
