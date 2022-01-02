@@ -7,7 +7,7 @@ import RepoList from './Components/RepoList';
 
 function App() {
   const [repoList, setRepoList] = React.useState([])
-  const [totalCount, setTotalCount] = React.useState(0)
+  const [totalCount, setTotalCount] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
 
 async function fetchData(keyword) {
@@ -17,9 +17,14 @@ async function fetchData(keyword) {
     const query = `${ keyword ? `?q=${keyword}` : ''}`
     const resp = await fetch(`${url}${query}`)
     const data = await resp.json()
-    setTotalCount(data.total_count)
-    setRepoList(data.items)
-    // console.log('data====',data)
+    console.log('data====',data)
+    if(data.items) {
+      setTotalCount(data.total_count)
+      setRepoList(data.items)
+    } else {
+      setTotalCount(null)
+      setRepoList([])
+    }
   }catch(ex){
     console.warn(ex)
   }
@@ -34,8 +39,10 @@ async function fetchData(keyword) {
     <div className="App">
       <h1>Search Repository in Github</h1>
       <SearchBar onSetKeyword={debounceSetKeyword}/>
-     
-      {!!totalCount && <p>There are {totalCount} results.</p>}
+        {console.log('total count', totalCount)}
+      {totalCount === 0 && <p>No matches were found.</p>}
+      {!!totalCount && <p>{totalCount} results were found.</p>}
+
       {loading && <img src={loadingGif} width={50}/>}
       <RepoList repoList={repoList}/>
     </div>
