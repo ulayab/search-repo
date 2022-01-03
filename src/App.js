@@ -96,9 +96,6 @@ console.log('search--',search)
 }
 
 const Wrapper = styled.div`
-  background-color: #f5f8fa;
-  height: 100vh;
-  
   & > .container {
     text-align: center;
     padding-bottom: 150px;
