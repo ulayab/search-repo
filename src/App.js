@@ -16,6 +16,7 @@ function App() {
   let location = useLocation();
   let search = location.search.substring(3) // split `?q=`
 console.log('repoList', repoList)
+console.log('search--',search)
   let page = 1
   async function fetchData() {
     setError(null)
@@ -54,12 +55,14 @@ console.log('repoList', repoList)
     history.push(`?q=${keyword}`);
   }, 1000)
 
+  const debounceGet = debounce(() => fetchData({keyword: search}), 1000)
+
   function handleScroll (e) {
     let topOfScroll = e.target.documentElement.scrollTop
     let totalHeight = e.target.documentElement.scrollHeight 
     if(topOfScroll + window.innerHeight == totalHeight) {
       page = page + 1
-      debounce(() => fetchData({keyword: search}), 1000)()
+      debounceGet() 
     }
   }
 
@@ -68,27 +71,39 @@ console.log('repoList', repoList)
   },[])
 
   React.useEffect(() => {
-    setRepoList([]) 
+    search !== '' && setRepoList([]) 
     fetchData()
   },[search])
 
   return (
-    <div className="App">
-      <h1>Search Repository in Github</h1>
-      <SearchBar onSetKeyword={debounceSetKeyword} paramsSearch={search}/>
-      {error && 
-      <ErrorBox>
-        <p>Some error has occurred.</p>
-        <div className='msg'>{error}</div>  
-      </ErrorBox>}
-      {totalCount === 0 && <p>No matches were found.</p>}
-      {!!totalCount && <p>{totalCount} results were found.</p>}
+    <Wrapper>
+      <div className='container'>
+        <h1>Search Repository in Github</h1>
+        <SearchBar onSetKeyword={debounceSetKeyword} paramsSearch={search}/>
+        {error && 
+        <ErrorBox>
+          <p>Some error has occurred.</p>
+          <div className='msg'>{error}</div>  
+        </ErrorBox>}
+        {totalCount === 0 && <p>No matches were found.</p>}
+        {!!totalCount && <p>{totalCount} results were found.</p>}
 
-      <RepoList repoList={repoList}/>
-      {loading && <img src={loadingGif} width={50}/>}
-    </div>
+        <RepoList repoList={repoList}/>
+        {loading && <img src={loadingGif} width={50} style={{marginBottom:30}}/>}
+      </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  background-color: #f5f8fa;
+  height: 100vh;
+  
+  & > .container {
+    text-align: center;
+    padding-bottom: 150px;
+  }
+`
 
 const ErrorBox = styled.div`
   padding: 10px;
