@@ -28,6 +28,8 @@ open [http://localhost:8000/](http://localhost:3000/) for running locally
 - Api error hints
 
 ## Directory Structure
+```
+search-repo
 ├── App.css
 ├── App.js
 ├── App.test.js
@@ -40,6 +42,6 @@ open [http://localhost:8000/](http://localhost:3000/) for running locally
 ├── logo.svg
 ├── reportWebVitals.js
 └── setupTests.js
-
+```
 It's a one-page application.
 `App.js`: The whole page entry, contains `SearchBar`, `ErrorBox` and `RepoList` 3 main components.
