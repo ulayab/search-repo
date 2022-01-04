@@ -15,13 +15,16 @@ function App() {
   const history = useHistory();
   let location = useLocation();
   let search = location.search.substring(3) // split `?q=`
-console.log('repoList', repoList)
-console.log('search--',search)
-  let page = 1
+  console.log('repoList', repoList)
+  var page = 1
   async function fetchData() {
     setError(null)
-    setLoading(true)
     try {
+      if(page < 0 ){
+        page = 1 // reset
+        return
+      }
+      setLoading(true)
       if( !search || search === "") {
         setTotalCount(null)
         setRepoList([])
@@ -43,7 +46,16 @@ console.log('search--',search)
       let new_items = []
       data.items.forEach(item => new_items.push(item))
       setTotalCount(data.total_count)
-      setRepoList(prevRepoList => [...prevRepoList, ...new_items])
+      setRepoList(prevRepoList => {
+        let resultArr= [...prevRepoList, ...new_items]
+          if(resultArr.length < data.total_count) {
+            page += 1
+          } else {
+            page = -1
+        }        
+        return resultArr
+      })
+      
     }
   }catch(ex){
     console.warn(ex)
@@ -59,10 +71,9 @@ console.log('search--',search)
 
   function handleScroll (e) {
     let topOfScroll = e.target.documentElement.scrollTop
-    let totalHeight = e.target.documentElement.scrollHeight 
-    if(topOfScroll + window.innerHeight == totalHeight) {
-      page = page + 1
-      debounceGet() 
+    let totalHeight = e.target.documentElement.scrollHeight
+    if(topOfScroll + window.innerHeight == totalHeight && !error) {
+      debounceGet()
     }
   }
 
