@@ -26,3 +26,20 @@ open [http://localhost:8000/](http://localhost:3000/) for running locally
 - Infinite scroll for paging
 - Url changing depends on searching keyword
 - Api error hints
+
+## Directory Structure
+├── App.css
+├── App.js
+├── App.test.js
+├── Components
+│   ├── RepoList.js
+│   └── SearchBar.js
+├── index.css
+├── index.js
+├── loading.gif
+├── logo.svg
+├── reportWebVitals.js
+└── setupTests.js
+
+It's a one-page application.
+`App.js`: The whole page entry, contains `SearchBar`, `ErrorBox` and `RepoList` 3 main components.
