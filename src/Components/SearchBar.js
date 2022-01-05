@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import {Search} from '@styled-icons/boxicons-regular/Search'
 
 function SearchBar (props) {
 	const [searchText, setSearchText] = React.useState(props.paramsSearch)
 
 	return(
 		<Wrapper>
+			<Search size={22} style={{marginLeft: 10}}/>
 			<input
-				placeholder="Search for repositories"
+				placeholder="search repos"
 				onChange={e => {
 					props.onSetKeyword(e.target.value)
 					setSearchText(e.target.value)
@@ -19,15 +21,21 @@ function SearchBar (props) {
 }
 
 const Wrapper = styled.div`
+	width: 250px;
+	margin: 0 auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	background-color: #fff;
+	border: 4px solid #000;
+	text-align: start;
 	& > input{
-		text-align: center;
-		width: 60%;
-		border: 2px solid #fff;
-		border-radius: 40px;
-		font-size: 20px;
+		border: none;
+		font-size: 16px;
 		letter-spacing: 1px;
-		padding: 10px 20px;
-		margin-bottom: 10px;
+		padding: 10px;
+	}
+	textarea:focus, input:focus{
+		outline: none;
 	}
 `
 
