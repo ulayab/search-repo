@@ -89,7 +89,12 @@ function App() {
   return (
     <Wrapper>
       <div className='container'>
-        <h1>Search Repository in Github</h1>
+        <div className="row">
+          <h1>Search Repository in</h1>
+          <span>
+            <img width={120} src={require('./GitHub_Logo.png')}/>
+          </span>
+        </div>
         <SearchBar onSetKeyword={debounceSetKeyword} paramsSearch={search}/>
         {error && 
         <ErrorBox>
@@ -110,6 +115,17 @@ const Wrapper = styled.div`
   & > .container {
     text-align: center;
     padding-bottom: 150px;
+  
+    & > .row {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      & > h1 {
+        color: #565657;
+      }
+    }
   }
 `
 
