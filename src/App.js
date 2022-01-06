@@ -1,7 +1,7 @@
 import React from 'react';
 import debounce from 'lodash.debounce'
 import styled from 'styled-components';
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import loadingGif from './loading.gif';
 import './App.css';
 import SearchBar from './Components/SearchBar';
@@ -12,27 +12,21 @@ function App() {
   const [totalCount, setTotalCount] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(null)
-  const pageRef = React.useRef(1);
   
+  const pageRef = React.useRef(1);
   const history = useHistory();
-
   let search = typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
-  console.log('++page state', pageRef)
-
-  console.log('repoList', repoList)
 
   async function fetchData() {
     let search = typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
     setError(null)
     try {
-      console.log('* page api', pageRef)
       if (pageRef.current < 0) {
-        // setPage(1) // reset
         pageRef.current = 1
         return
       }
       setLoading(true)
-      console.log('search in fetch data',search)
+
       if (!search || search === "") {
         setTotalCount(null)
         setRepoList([])
@@ -41,7 +35,7 @@ function App() {
         const query = `?q=${search}?page=${pageRef.current}`
         const resp = await fetch(`${url}${query}`)
         const data = await resp.json()
-        console.log('data?', data)
+
         if (!data.items) {
           if (data.message) {
             setError(`${data.message}`)
@@ -57,13 +51,9 @@ function App() {
 
         setRepoList(prevRepoList => {
           let resultArr = [...prevRepoList, ...new_items]
-          console.log('resultArr.length', resultArr.length)
-          console.log('data.total_count', data.total_count)
           if (resultArr.length < data.total_count) {
-            // setPage(prevPage => prevPage + 1)
             pageRef.current = pageRef.current+ 1
           } else {
-            // setPage(-1)
             pageRef.current = -1
           }
           
@@ -83,7 +73,6 @@ function App() {
   const debounceGet = debounce(() => {
     let _search =
       typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
-    console.log('search in debounce', _search)
     fetchData(_search)
   }, 1000)
 

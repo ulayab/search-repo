@@ -3,7 +3,6 @@ import {RepoForked} from '@styled-icons/octicons/RepoForked'
 import {Star} from '@styled-icons/bootstrap/Star'
 
 function RepoList(props) {
-	// console.log('props-repo', props.repoList)
 	return(
 		<Wrapper>
 			{props.repoList.map((repo,idx) =>
@@ -39,7 +38,6 @@ const Wrapper = styled.div`
 	& .repo-item {
 		display: flex;
 		margin: 15px 0px;
-		/* border: 1px solid #ccc; */
 		border-radius: 5px;
 		padding: 20px;
 		width: 70%;
