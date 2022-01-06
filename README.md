@@ -43,6 +43,7 @@ search-repo
 ├── reportWebVitals.js
 └── setupTests.js
 ```
+## Code Structure
 It's a one-page application.
 
 `App.js`: The whole page entry, contains `SearchBar`, `ErrorBox` and `RepoList` 3 main components.
