@@ -12,79 +12,97 @@ function App() {
   const [totalCount, setTotalCount] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(null)
+  const pageRef = React.useRef(1);
+  
   const history = useHistory();
-  let location = useLocation();
-  let search = location.search.substring(3) // split `?q=`
+
+  let search = typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
+  console.log('++page state', pageRef)
+
   console.log('repoList', repoList)
-  var page = 1
+
   async function fetchData() {
+    let search = typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
     setError(null)
     try {
-      if(page < 0 ){
-        page = 1 // reset
+      console.log('* page api', pageRef)
+      if (pageRef.current < 0) {
+        // setPage(1) // reset
+        pageRef.current = 1
         return
       }
       setLoading(true)
-      if( !search || search === "") {
+      console.log('search in fetch data',search)
+      if (!search || search === "") {
         setTotalCount(null)
         setRepoList([])
       } else {
-      const url = 'https://api.github.com/search/repositories'
-      const query = `?q=${search}?page=${page}`
-      const resp = await fetch(`${url}${query}`)
-      const data = await resp.json()
-      console.log('data?',data)
-      if(!data.items) {
-        if(data.message) {
-          setError(`${data.message}`)
-        } else {
-          setError('unknown error occurred') 
-        }
-        setLoading(false)
-        return
-      }
-      let new_items = []
-      data.items.forEach(item => new_items.push(item))
-      setTotalCount(data.total_count)
-      setRepoList(prevRepoList => {
-        let resultArr= [...prevRepoList, ...new_items]
-          if(resultArr.length < data.total_count) {
-            page += 1
+        const url = 'https://api.github.com/search/repositories'
+        const query = `?q=${search}?page=${pageRef.current}`
+        const resp = await fetch(`${url}${query}`)
+        const data = await resp.json()
+        console.log('data?', data)
+        if (!data.items) {
+          if (data.message) {
+            setError(`${data.message}`)
           } else {
-            page = -1
-        }        
-        return resultArr
-      })
-      
+            setError('unknown error occurred')
+          }
+          setLoading(false)
+          return
+        }
+        let new_items = []
+        data.items.forEach(item => new_items.push(item))
+        setTotalCount(data.total_count)
+
+        setRepoList(prevRepoList => {
+          let resultArr = [...prevRepoList, ...new_items]
+          console.log('resultArr.length', resultArr.length)
+          console.log('data.total_count', data.total_count)
+          if (resultArr.length < data.total_count) {
+            // setPage(prevPage => prevPage + 1)
+            pageRef.current = pageRef.current+ 1
+          } else {
+            // setPage(-1)
+            pageRef.current = -1
+          }
+          
+          return resultArr
+        })
+      }
+    } catch (ex) {
+      console.warn(ex)
     }
-  }catch(ex){
-    console.warn(ex)
+    setLoading(false)
   }
-  setLoading(false)
-}
 
   const debounceSetKeyword = debounce((keyword) => {
     history.push(`?q=${keyword}`);
   }, 1000)
 
-  const debounceGet = debounce(() => fetchData({keyword: search}), 1000)
+  const debounceGet = debounce(() => {
+    let _search =
+      typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
+    console.log('search in debounce', _search)
+    fetchData(_search)
+  }, 1000)
 
-  function handleScroll (e) {
+  function handleScroll(e) {
     let topOfScroll = e.target.documentElement.scrollTop
     let totalHeight = e.target.documentElement.scrollHeight
-    if(topOfScroll + window.innerHeight == totalHeight && !error) {
+    if (topOfScroll + window.innerHeight == totalHeight && !error) {
       debounceGet()
     }
   }
 
   React.useEffect(() => {
     window.addEventListener("scroll", handleScroll)
-  },[])
+  }, [])
 
   React.useEffect(() => {
-    search !== '' && setRepoList([]) 
+    search !== '' && setRepoList([])
     fetchData()
-  },[search])
+  }, [search])
 
   return (
     <Wrapper>
@@ -92,20 +110,20 @@ function App() {
         <div className="row">
           <h1>Search Repository in</h1>
           <span>
-            <img width={120} src={require('./GitHub_Logo.png')}/>
+            <img width={120} src={require('./GitHub_Logo.png')} />
           </span>
         </div>
-        <SearchBar onSetKeyword={debounceSetKeyword} paramsSearch={search}/>
-        {error && 
-        <ErrorBox>
-          <p>Some error has occurred.</p>
-          <div className='msg'>{error}</div>  
-        </ErrorBox>}
+        <SearchBar onSetKeyword={debounceSetKeyword} paramsSearch={search} />
+        {error &&
+          <ErrorBox>
+            <p>Some error has occurred.</p>
+            <div className='msg'>{error}</div>
+          </ErrorBox>}
         {totalCount === 0 && <p>No matches were found.</p>}
         {!!totalCount && <p>{totalCount} results were found.</p>}
 
-        <RepoList repoList={repoList}/>
-        {loading && <img src={loadingGif} width={50} style={{marginBottom:30}}/>}
+        <RepoList repoList={repoList} />
+        {loading && <img src={loadingGif} width={50} style={{ marginBottom: 30 }} />}
       </div>
     </Wrapper>
   );
