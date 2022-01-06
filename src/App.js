@@ -25,6 +25,7 @@ function App() {
         pageRef.current = 1
         return
       }
+
       setLoading(true)
 
       if (!search || search === "") {
@@ -68,13 +69,11 @@ function App() {
 
   const debounceSetKeyword = debounce((keyword) => {
     history.push(`?q=${keyword}`);
+    pageRef.current = 1
+    fetchData()
   }, 1000)
 
-  const debounceGet = debounce(() => {
-    let _search =
-      typeof window !== 'undefined' ? window.location.search.substring(3) : ''; // split `?q=` 
-    fetchData(_search)
-  }, 1000)
+  const debounceGet = debounce(() => fetchData(), 1000)
 
   function handleScroll(e) {
     let topOfScroll = e.target.documentElement.scrollTop
@@ -90,7 +89,6 @@ function App() {
 
   React.useEffect(() => {
     search !== '' && setRepoList([])
-    fetchData()
   }, [search])
 
   return (
